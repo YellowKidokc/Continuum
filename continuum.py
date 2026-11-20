@@ -50,6 +50,13 @@ def now():
 def canonical(path):
     return str(Path(path).expanduser().absolute())
 
+def is_within(root, child):
+    """Return False for paths on different Windows volumes."""
+    try:
+        return os.path.commonpath([root, child]) == root
+    except ValueError:
+        return False
+
 def connect(db):
     p = Path(db).expanduser().absolute()
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -82,7 +89,7 @@ def scan(conn, root, db_path=None):
         raise ValueError("Scan root is not an accessible directory: " + root)
     if os.path.islink(root):
         raise ValueError("Symlink roots are not supported")
-    if db_path and os.path.commonpath([root, canonical(db_path)]) == root:
+    if db_path and is_within(root, canonical(db_path)):
         raise ValueError("Database must be outside scanned root (prevents self-indexing)")
     sid = str(uuid.uuid4())
     conn.execute("INSERT INTO scans(id,root,started,status) VALUES (?,?,?,?)",
@@ -201,7 +208,7 @@ def main(argv=None):
         # Check before DB initialization to avoid creating the DB in a scan root.
         dbabs = canonical(args.db)
         rt = canonical(args.root)
-        if os.path.commonpath([rt, dbabs]) == rt:
+        if is_within(rt, dbabs):
             ap.error("Put --db outside the scanned directory")
     with connect(args.db) as conn:
         if args.command == "scan":
