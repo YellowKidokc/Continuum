@@ -1,5 +1,7 @@
 # Continuum — The Living Archive
 
+> **ARCHITECTURE UPDATE (2026-11-20):** The project's primary objective is now the **Faith Through Physics research depth funnel**, not building a new standalone file organizer. **Read [ADR-0001](docs/ADR-0001-DEPTH-ARCHITECTURE.md) and [HANDOFF.md](HANDOFF.md) before coding.** Start with a divergence audit of David-OSv3 checkouts and a minimal Consciousness pilot using Quantum Paper IDs + David-OSv3 registry + Continuum link resolution. **Do not** independently replace the registry or add Kensaku/Hister/CocoIndex as mandatory dependencies. The scanner below is an experimental, read-only spike, not the chosen source of truth.
+
 > **Nothing lost. Everything connected. Every change accounted for.**
 
 **Status:** Early architecture and development planning. The features described below are design goals, **not yet implemented or validated**.
@@ -29,7 +31,7 @@ A file can have multiple meanings and relationships. It should **not** need one 
 
 A pathname is a location, not an identity. A content hash identifies a byte sequence, not necessarily a unique logical document. A model-generated label is an interpretation, not a fact. Continuum keeps these concepts separate.
 
-## Architectural sketch
+## Earlier architecture sketch — historical candidate, superseded by ADR-0001
 
 ```text
 Windows drives / NAS / repositories / vaults / inboxes
@@ -117,7 +119,7 @@ Example (hypothetical):
 
 This requires explicit, provenance-backed edges and uncertainty handling; proximity in vector space alone does not establish a true dependency.
 
-## Development roadmap
+## Earlier development roadmap — historical proposal, not the current build order
 
 ### Milestone 0 — Foundational specification
 - [ ] Define the registry, event ledger, stable ID and version semantics.
@@ -170,7 +172,7 @@ A prototype is **not** considered reliable just because it can index a directory
 | Ambiguous classification | Keep alternatives and evidence; do not fabricate certainty. |
 | Interrupted scan | Resume or restart safely; never label a partial scan complete. |
 
-## Candidate technology choices
+## Earlier candidate technology choices — not approved dependencies
 
 - **Python:** scanning, adapters, reconciliation and orchestration.
 - **PostgreSQL:** authoritative registry, event history, relationship records and queryable metadata.
